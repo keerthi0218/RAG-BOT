@@ -22,6 +22,8 @@ warnings.filterwarnings("ignore", category=LangChainDeprecationWarning)
 
 DB_PATH = Path("users.db")
 CHROMA_DIR = Path("chroma_db")
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 GROQ_MODEL = "openai/gpt-oss-20b"
 NO_INFO_MESSAGE = "I do not have enough information in the provided knowledge base to answer this."
@@ -44,7 +46,7 @@ User Question:
 Answer:"""
 
 app = FastAPI(title="RAG Customer Support Chatbot")
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 class AskRequest(BaseModel):
@@ -58,7 +60,7 @@ class AskResponse(BaseModel):
 
 @app.get("/")
 def frontend() -> FileResponse:
-    return FileResponse("static/index.html")
+    return FileResponse(STATIC_DIR / "index.html")
 
 
 @app.get("/favicon.ico", include_in_schema=False)
